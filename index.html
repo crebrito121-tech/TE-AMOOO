@@ -1,0 +1,4417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no"
+>
+
+<meta name="theme-color" content="#050107">
+
+<title>TE AMO ♡</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    min-height:100dvh;
+
+    overflow:hidden;
+
+    overscroll-behavior:none;
+
+    background:
+        radial-gradient(
+            circle at 70% 45%,
+            rgba(255,30,150,.08),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 28% 40%,
+            rgba(130,55,255,.09),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 50% 45%,
+            #170817 0%,
+            #08030c 43%,
+            #020104 72%,
+            #000 100%
+        );
+
+    touch-action:none;
+}
+
+body{
+    position:fixed;
+    inset:0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+}
+
+canvas{
+    position:fixed;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    display:block;
+
+    touch-action:none;
+}
+
+/* =====================================================
+   INDICACIÓN
+===================================================== */
+
+#hint{
+    position:fixed;
+
+    left:50%;
+
+    bottom:
+        calc(
+            24px +
+            env(safe-area-inset-bottom)
+        );
+
+    transform:
+        translateX(-50%);
+
+    z-index:20;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:9px;
+
+    letter-spacing:3.5px;
+
+    white-space:nowrap;
+
+    color:
+        rgba(255,205,235,.46);
+
+    text-shadow:
+        0 0 12px
+        rgba(255,90,180,.18);
+
+    pointer-events:none;
+
+    animation:
+        fadeHint 9s forwards;
+}
+
+@keyframes fadeHint{
+
+    0%,
+    55%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:0;
+    }
+}
+
+/* =====================================================
+   MENSAJE FINAL
+===================================================== */
+
+#secret-message{
+
+    position:fixed;
+
+    left:50%;
+
+    bottom:
+        calc(
+            44px +
+            env(safe-area-inset-bottom)
+        );
+
+    width:min(90%,700px);
+
+    transform:
+        translateX(-50%)
+        translateY(12px);
+
+    z-index:20;
+
+    text-align:center;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(12px,1.2vw,17px);
+
+    font-style:italic;
+
+    letter-spacing:1.6px;
+
+    line-height:1.55;
+
+    color:
+        rgba(255,220,240,0);
+
+    text-shadow:
+        0 0 20px
+        rgba(255,100,190,0);
+
+    pointer-events:none;
+
+    transition:
+        color 3.5s ease,
+        text-shadow 3.5s ease,
+        transform 3.5s ease;
+}
+
+#secret-message.visible{
+
+    color:
+        rgba(255,220,240,.78);
+
+    text-shadow:
+        0 0 20px
+        rgba(255,100,190,.28);
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+/* =====================================================
+   🐾 CONTENEDOR
+===================================================== */
+
+#paw-secret{
+
+    position:fixed;
+
+    left:50%;
+
+    bottom:
+        calc(
+            105px +
+            env(safe-area-inset-bottom)
+        );
+
+    transform:
+        translateX(-50%)
+        translateY(12px)
+        scale(.88);
+
+    z-index:50;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transition:
+        opacity 1.5s ease,
+        visibility 1.5s ease,
+        transform 1.5s
+        cubic-bezier(.16,1,.3,1);
+}
+
+#paw-secret.visible{
+
+    opacity:1;
+
+    visibility:visible;
+
+    pointer-events:auto;
+
+    transform:
+        translateX(-50%)
+        translateY(0)
+        scale(1);
+}
+
+/* =====================================================
+   🐾 BOTÓN
+===================================================== */
+
+#paw-button{
+
+    position:relative;
+
+    width:62px;
+    height:62px;
+
+    display:grid;
+
+    place-items:center;
+
+    font-size:32px;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    -webkit-user-select:none;
+
+    opacity:.96;
+
+    filter:
+        drop-shadow(
+            0 0 5px
+            rgba(255,255,255,.75)
+        )
+        drop-shadow(
+            0 0 13px
+            rgba(255,100,190,.95)
+        )
+        drop-shadow(
+            0 0 27px
+            rgba(210,70,255,.50)
+        );
+
+    animation:
+        pawFloat 3.4s
+        ease-in-out
+        infinite;
+}
+
+/* halo */
+
+#paw-button::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:50px;
+    height:50px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,235,247,.38) 0%,
+            rgba(255,120,200,.24) 30%,
+            rgba(205,70,255,.10) 60%,
+            transparent 76%
+        );
+
+    z-index:-1;
+
+    animation:
+        pawGlow 2.7s
+        ease-in-out
+        infinite;
+}
+
+/* toca aquí */
+
+#paw-button::after{
+
+    content:"TOCA AQUÍ";
+
+    position:absolute;
+
+    top:59px;
+
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:7px;
+
+    font-weight:500;
+
+    letter-spacing:2.4px;
+
+    white-space:nowrap;
+
+    color:
+        rgba(255,220,240,.75);
+
+    text-shadow:
+        0 0 10px
+        rgba(255,100,190,.55);
+}
+
+@keyframes pawFloat{
+
+    0%,
+    100%{
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+    50%{
+
+        transform:
+            translateY(-7px)
+            scale(1.08);
+    }
+}
+
+@keyframes pawGlow{
+
+    0%,
+    100%{
+
+        opacity:.48;
+
+        transform:
+            scale(.85);
+    }
+
+    50%{
+
+        opacity:1;
+
+        transform:
+            scale(1.5);
+    }
+}
+
+/* =====================================================
+   TARJETA PERRITOS
+===================================================== */
+
+#dog-card{
+
+    position:absolute;
+
+    bottom:78px;
+
+    left:50%;
+
+    width:
+        clamp(
+            155px,
+            17vw,
+            205px
+        );
+
+    padding:
+        6px 6px 10px;
+
+    border-radius:17px;
+
+    border:
+        1px solid
+        rgba(255,190,225,.25);
+
+    background:
+        rgba(14,3,18,.78);
+
+    backdrop-filter:
+        blur(14px);
+
+    -webkit-backdrop-filter:
+        blur(14px);
+
+    box-shadow:
+        0 18px 55px
+        rgba(0,0,0,.72),
+
+        0 0 40px
+        rgba(255,70,170,.20);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transform:
+        translateX(-50%)
+        translateY(15px)
+        scale(.87);
+
+    transition:
+        opacity .65s ease,
+        visibility .65s,
+        transform .65s
+        cubic-bezier(.16,1,.3,1);
+}
+
+/*
+PC = hover
+Celular = clase open
+*/
+
+@media (hover:hover){
+
+    #paw-secret:hover
+    #dog-card{
+
+        opacity:1;
+
+        visibility:visible;
+
+        pointer-events:auto;
+
+        transform:
+            translateX(-50%)
+            translateY(0)
+            scale(1);
+    }
+}
+
+#paw-secret.open
+#dog-card{
+
+    opacity:1;
+
+    visibility:visible;
+
+    pointer-events:auto;
+
+    transform:
+        translateX(-50%)
+        translateY(0)
+        scale(1);
+}
+
+.dog-photo-wrapper{
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:12px;
+}
+
+#dog-photo{
+
+    display:block;
+
+    width:100%;
+
+    height:auto;
+
+    max-height:240px;
+
+    object-fit:cover;
+
+    border-radius:12px;
+
+    opacity:.96;
+
+    filter:
+        saturate(.95)
+        brightness(.95);
+
+    transform:
+        scale(1.01);
+
+    transition:
+        transform 1s ease,
+        filter 1s ease;
+}
+
+#dog-card:hover
+#dog-photo{
+
+    transform:
+        scale(1.045);
+
+    filter:
+        saturate(1)
+        brightness(1);
+}
+
+.dog-photo-wrapper::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    pointer-events:none;
+
+    border-radius:12px;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(255,235,248,.03),
+            rgba(255,80,175,.07)
+        );
+}
+
+#dog-text{
+
+    padding-top:9px;
+
+    text-align:center;
+
+    font-size:10px;
+
+    font-style:italic;
+
+    letter-spacing:1px;
+
+    line-height:1.4;
+
+    color:
+        rgba(255,220,240,.85);
+
+    text-shadow:
+        0 0 12px
+        rgba(255,100,190,.25);
+}
+
+/* =====================================================
+   CELULAR
+===================================================== */
+
+@media(max-width:600px){
+
+    #hint{
+
+        bottom:
+            calc(
+                22px +
+                env(safe-area-inset-bottom)
+            );
+
+        font-size:7px;
+
+        letter-spacing:2.3px;
+    }
+
+    #secret-message{
+
+        bottom:
+            calc(
+                42px +
+                env(safe-area-inset-bottom)
+            );
+
+        width:88%;
+
+        font-size:11px;
+
+        line-height:1.55;
+
+        letter-spacing:1px;
+    }
+
+    #paw-secret{
+
+        bottom:
+            calc(
+                104px +
+                env(safe-area-inset-bottom)
+            );
+    }
+
+    #paw-button{
+
+        width:64px;
+
+        height:64px;
+
+        font-size:34px;
+    }
+
+    #paw-button::after{
+
+        top:61px;
+
+        font-size:7px;
+    }
+
+    #dog-card{
+
+        width:
+            min(
+                44vw,
+                175px
+            );
+
+        bottom:82px;
+    }
+}
+
+/* iPhone vertical muy angosto */
+
+@media(
+    max-width:430px
+)
+and
+(orientation:portrait){
+
+    #dog-card{
+
+        width:
+            min(
+                46vw,
+                178px
+            );
+    }
+}
+
+/* horizontal */
+
+@media(
+    max-height:500px
+)
+and
+(orientation:landscape){
+
+    #paw-secret{
+
+        left:auto;
+
+        right:
+            calc(
+                20px +
+                env(safe-area-inset-right)
+            );
+
+        bottom:
+            calc(
+                55px +
+                env(safe-area-inset-bottom)
+            );
+
+        transform:none;
+    }
+
+    #paw-secret.visible{
+
+        transform:none;
+    }
+
+    #secret-message{
+
+        bottom:
+            calc(
+                18px +
+                env(safe-area-inset-bottom)
+            );
+    }
+
+    #dog-card{
+
+        left:auto;
+
+        right:0;
+
+        transform:
+            translateY(10px)
+            scale(.9);
+    }
+
+    #paw-secret.open
+    #dog-card{
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+
+<div id="paw-secret">
+
+    <div
+        id="paw-button"
+        role="button"
+        aria-label="Mostrar nuestro recuerdo"
+    >
+        🐾
+    </div>
+
+    <div id="dog-card">
+
+        <div class="dog-photo-wrapper">
+
+            <img
+                id="dog-photo"
+                src="perritos.png"
+                alt="Nuestros perritos"
+            >
+
+        </div>
+
+        <div id="dog-text">
+            TE AMO MUCHO MUCHO MUCHOOO
+            
+        </div>
+
+    </div>
+
+</div>
+
+<div id="secret-message">
+    incluso en las vidas que aún no hemos vivido.
+</div>
+
+<script type="module">
+
+import * as THREE
+from "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js";
+
+/* =====================================================
+   DETECTAR CELULAR
+===================================================== */
+
+const isTouchDevice =
+    window.matchMedia(
+        "(pointer: coarse)"
+    ).matches;
+
+const isMobile =
+    window.innerWidth <= 600;
+
+/* Cambiar instrucción PC / celular */
+
+
+/* =====================================================
+   CONFIG
+===================================================== */
+
+const CONFIG={
+
+    particleGap:
+        isMobile
+            ?5
+            :4,
+
+    particleSize:
+        isMobile
+            ?4.8
+            :5.2,
+
+    mouseRadius:
+        isTouchDevice
+            ?50
+            :35,
+
+    mouseForce:
+        isTouchDevice
+            ?.28
+            :.22,
+
+    mouseDragForce:
+        isTouchDevice
+            ?.032
+            :.025,
+
+    depthForce:.15,
+
+    spring:.0012,
+
+    friction:.965,
+
+    returnDelay:2.2,
+
+    formationTime:5.5,
+
+    secretStart:7,
+
+    messageStart:8,
+
+    secretDuration:5,
+
+    pawReveal:11.5
+};
+
+/* =====================================================
+   ESCENA
+===================================================== */
+
+const scene =
+    new THREE.Scene();
+
+scene.fog =
+    new THREE.FogExp2(
+        0x050107,
+        .00105
+    );
+
+const camera =
+    new THREE.PerspectiveCamera(
+        60,
+        innerWidth /
+        innerHeight,
+        .1,
+        3500
+    );
+
+camera.position.z =
+    isMobile
+        ?720
+        :700;
+
+const renderer =
+    new THREE.WebGLRenderer({
+
+        antialias:true,
+
+        alpha:true,
+
+        powerPreference:
+            "high-performance"
+    });
+
+renderer.setPixelRatio(
+
+    Math.min(
+
+        window.devicePixelRatio || 1,
+
+        isMobile
+            ?1.6
+            :2
+    )
+);
+
+renderer.setSize(
+    innerWidth,
+    innerHeight
+);
+
+renderer.setClearColor(
+    0x000000,
+    0
+);
+
+document.body.appendChild(
+    renderer.domElement
+);
+
+/* =====================================================
+   TEXTURA PARTÍCULAS
+===================================================== */
+
+function createParticleTexture(){
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+    canvas.width=128;
+    canvas.height=128;
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+    const gradient =
+        ctx.createRadialGradient(
+            64,64,0,
+            64,64,64
+        );
+
+    gradient.addColorStop(
+        0,
+        "rgba(255,255,255,1)"
+    );
+
+    gradient.addColorStop(
+        .08,
+        "rgba(255,250,255,1)"
+    );
+
+    gradient.addColorStop(
+        .22,
+        "rgba(255,170,225,.9)"
+    );
+
+    gradient.addColorStop(
+        .48,
+        "rgba(215,80,255,.30)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(80,0,160,0)"
+    );
+
+    ctx.fillStyle =
+        gradient;
+
+    ctx.fillRect(
+        0,0,
+        128,128
+    );
+
+    return new THREE.CanvasTexture(
+        canvas
+    );
+}
+
+const particleTexture =
+    createParticleTexture();
+
+/* =====================================================
+   GALAXIA
+===================================================== */
+
+function createGalaxy(){
+
+    const count =
+        isMobile
+            ?3500
+            :6500;
+
+    const positions =
+        new Float32Array(
+            count*3
+        );
+
+    const colors =
+        new Float32Array(
+            count*3
+        );
+
+    const branches=5;
+
+    const maxRadius=560;
+
+    const pink =
+        new THREE.Color(
+            0xffc4e8
+        );
+
+    const purple =
+        new THREE.Color(
+            0xb36cff
+        );
+
+    const blue =
+        new THREE.Color(
+            0x655cff
+        );
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        const radius =
+            Math.pow(
+                Math.random(),
+                .68
+            )*
+            maxRadius;
+
+        const branch =
+            (
+                i%
+                branches
+            )/
+            branches*
+            Math.PI*
+            2;
+
+        const spin =
+            radius/
+            maxRadius*
+            Math.PI*
+            1.8;
+
+        const angle =
+            branch+
+            spin;
+
+        const spread =
+            10+
+            radius*.14;
+
+        positions[i*3] =
+            Math.cos(
+                angle
+            )*
+            radius+
+            (
+                Math.random()-.5
+            )*
+            spread;
+
+        positions[i*3+1] =
+            Math.sin(
+                angle
+            )*
+            radius*
+            .47+
+            (
+                Math.random()-.5
+            )*
+            spread;
+
+        positions[i*3+2] =
+            (
+                Math.random()-.5
+            )*
+            (
+                20+
+                radius*.06
+            );
+
+        const t =
+            radius/
+            maxRadius;
+
+        let color;
+
+        if(t<.35){
+
+            color =
+                pink
+                .clone()
+                .lerp(
+                    purple,
+                    t/.35
+                );
+
+        }else{
+
+            color =
+                purple
+                .clone()
+                .lerp(
+                    blue,
+                    (
+                        t-.35
+                    )/
+                    .65
+                );
+        }
+
+        const brightness =
+            .65+
+            Math.random()*
+            .35;
+
+        colors[i*3] =
+            color.r*
+            brightness;
+
+        colors[i*3+1] =
+            color.g*
+            brightness;
+
+        colors[i*3+2] =
+            color.b*
+            brightness;
+    }
+
+    const geometry =
+        new THREE.BufferGeometry();
+
+    geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(
+            positions,
+            3
+        )
+    );
+
+    geometry.setAttribute(
+        "color",
+        new THREE.BufferAttribute(
+            colors,
+            3
+        )
+    );
+
+    const material =
+        new THREE.PointsMaterial({
+
+            size:
+                isMobile
+                    ?3.2
+                    :3.6,
+
+            map:
+                particleTexture,
+
+            vertexColors:true,
+
+            transparent:true,
+
+            opacity:.16,
+
+            blending:
+                THREE.AdditiveBlending,
+
+            depthWrite:false
+        });
+
+    const galaxy =
+        new THREE.Points(
+            geometry,
+            material
+        );
+
+    galaxy.position.set(
+        0,
+        15,
+        -300
+    );
+
+    galaxy.rotation.x =
+        -.12;
+
+    galaxy.rotation.z =
+        -.20;
+
+    scene.add(
+        galaxy
+    );
+
+    return galaxy;
+}
+
+const galaxy =
+    createGalaxy();
+
+/* =====================================================
+   AURORA
+===================================================== */
+
+function createAuroraTexture(){
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+    canvas.width=1024;
+    canvas.height=512;
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+    let gradient =
+        ctx.createRadialGradient(
+            330,250,20,
+            330,250,340
+        );
+
+    gradient.addColorStop(
+        0,
+        "rgba(255,55,170,.30)"
+    );
+
+    gradient.addColorStop(
+        .25,
+        "rgba(255,40,160,.15)"
+    );
+
+    gradient.addColorStop(
+        .58,
+        "rgba(160,30,190,.06)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(0,0,0,0)"
+    );
+
+    ctx.fillStyle =
+        gradient;
+
+    ctx.fillRect(
+        0,0,
+        1024,512
+    );
+
+    gradient =
+        ctx.createRadialGradient(
+            650,210,10,
+            650,210,310
+        );
+
+    gradient.addColorStop(
+        0,
+        "rgba(160,70,255,.25)"
+    );
+
+    gradient.addColorStop(
+        .32,
+        "rgba(125,45,235,.12)"
+    );
+
+    gradient.addColorStop(
+        .68,
+        "rgba(75,30,170,.04)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(0,0,0,0)"
+    );
+
+    ctx.fillStyle =
+        gradient;
+
+    ctx.fillRect(
+        0,0,
+        1024,512
+    );
+
+    gradient =
+        ctx.createRadialGradient(
+            820,310,20,
+            820,310,270
+        );
+
+    gradient.addColorStop(
+        0,
+        "rgba(70,130,255,.13)"
+    );
+
+    gradient.addColorStop(
+        .45,
+        "rgba(70,70,220,.05)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(0,0,0,0)"
+    );
+
+    ctx.fillStyle =
+        gradient;
+
+    ctx.fillRect(
+        0,0,
+        1024,512
+    );
+
+    return new THREE.CanvasTexture(
+        canvas
+    );
+}
+
+const auroraTexture =
+    createAuroraTexture();
+
+function createAurora(
+    x,
+    y,
+    z,
+    width,
+    height,
+    opacity,
+    rotation
+){
+
+    const material =
+        new THREE.SpriteMaterial({
+
+            map:
+                auroraTexture,
+
+            transparent:true,
+
+            opacity,
+
+            blending:
+                THREE.AdditiveBlending,
+
+            depthWrite:false,
+
+            rotation
+        });
+
+    const sprite =
+        new THREE.Sprite(
+            material
+        );
+
+    sprite.position.set(
+        x,y,z
+    );
+
+    sprite.scale.set(
+        width,
+        height,
+        1
+    );
+
+    scene.add(
+        sprite
+    );
+
+    return sprite;
+}
+
+const auroraMain =
+    createAurora(
+        -80,
+        35,
+        -470,
+        1500,
+        720,
+        .22,
+        -.15
+    );
+
+const auroraSecondary =
+    createAurora(
+        300,
+        -100,
+        -560,
+        1250,
+        600,
+        .13,
+        .28
+    );
+
+/* =====================================================
+   NEBULOSAS
+===================================================== */
+
+function createNebulaTexture(
+    c1,
+    c2
+){
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+    canvas.width=512;
+    canvas.height=512;
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+    const g =
+        ctx.createRadialGradient(
+            256,256,0,
+            256,256,256
+        );
+
+    g.addColorStop(
+        0,
+        c1
+    );
+
+    g.addColorStop(
+        .35,
+        c2
+    );
+
+    g.addColorStop(
+        1,
+        "rgba(0,0,0,0)"
+    );
+
+    ctx.fillStyle =
+        g;
+
+    ctx.fillRect(
+        0,0,
+        512,512
+    );
+
+    return new THREE.CanvasTexture(
+        canvas
+    );
+}
+
+function createNebula(
+    x,
+    y,
+    z,
+    width,
+    height,
+    c1,
+    c2,
+    opacity
+){
+
+    const material =
+        new THREE.SpriteMaterial({
+
+            map:
+                createNebulaTexture(
+                    c1,
+                    c2
+                ),
+
+            transparent:true,
+
+            opacity,
+
+            blending:
+                THREE.AdditiveBlending,
+
+            depthWrite:false
+        });
+
+    const sprite =
+        new THREE.Sprite(
+            material
+        );
+
+    sprite.position.set(
+        x,y,z
+    );
+
+    sprite.scale.set(
+        width,
+        height,
+        1
+    );
+
+    scene.add(
+        sprite
+    );
+
+    return sprite;
+}
+
+const nebulaPink =
+    createNebula(
+        -200,
+        40,
+        -390,
+        900,
+        650,
+        "rgba(255,50,160,.30)",
+        "rgba(180,20,150,.10)",
+        .34
+    );
+
+const nebulaPurple =
+    createNebula(
+        240,
+        -40,
+        -420,
+        950,
+        680,
+        "rgba(170,60,255,.25)",
+        "rgba(100,20,200,.08)",
+        .30
+    );
+
+const nebulaBlue =
+    createNebula(
+        20,
+        190,
+        -500,
+        700,
+        520,
+        "rgba(80,150,255,.15)",
+        "rgba(70,50,190,.06)",
+        .20
+    );
+
+/* =====================================================
+   HALO
+===================================================== */
+
+function createHaloTexture(){
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+    canvas.width=512;
+    canvas.height=256;
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+    const g =
+        ctx.createRadialGradient(
+            256,128,0,
+            256,128,240
+        );
+
+    g.addColorStop(
+        0,
+        "rgba(255,150,220,.32)"
+    );
+
+    g.addColorStop(
+        .18,
+        "rgba(255,70,180,.18)"
+    );
+
+    g.addColorStop(
+        .45,
+        "rgba(180,50,230,.07)"
+    );
+
+    g.addColorStop(
+        1,
+        "rgba(0,0,0,0)"
+    );
+
+    ctx.fillStyle =
+        g;
+
+    ctx.fillRect(
+        0,0,
+        512,256
+    );
+
+    return new THREE.CanvasTexture(
+        canvas
+    );
+}
+
+const haloMaterial =
+    new THREE.SpriteMaterial({
+
+        map:
+            createHaloTexture(),
+
+        transparent:true,
+
+        opacity:.14,
+
+        blending:
+            THREE.AdditiveBlending,
+
+        depthWrite:false
+    });
+
+const textHalo =
+    new THREE.Sprite(
+        haloMaterial
+    );
+
+textHalo.position.set(
+    0,
+    5,
+    -100
+);
+
+textHalo.scale.set(
+    780,
+    390,
+    1
+);
+
+scene.add(
+    textHalo
+);
+
+/* =====================================================
+   CORAZÓN
+===================================================== */
+
+function createHeartTexture(){
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+    canvas.width=512;
+    canvas.height=512;
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+    ctx.translate(
+        256,
+        240
+    );
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        0,
+        90
+    );
+
+    ctx.bezierCurveTo(
+        -220,-40,
+        -130,-210,
+        0,-95
+    );
+
+    ctx.bezierCurveTo(
+        130,-210,
+        220,-40,
+        0,90
+    );
+
+    ctx.shadowBlur=80;
+
+    ctx.shadowColor =
+        "rgba(255,60,170,.85)";
+
+    ctx.strokeStyle =
+        "rgba(255,100,195,.28)";
+
+    ctx.lineWidth=18;
+
+    ctx.stroke();
+
+    return new THREE.CanvasTexture(
+        canvas
+    );
+}
+
+const heartMaterial =
+    new THREE.SpriteMaterial({
+
+        map:
+            createHeartTexture(),
+
+        transparent:true,
+
+        opacity:.07,
+
+        blending:
+            THREE.AdditiveBlending,
+
+        depthWrite:false
+    });
+
+const heart =
+    new THREE.Sprite(
+        heartMaterial
+    );
+
+heart.position.set(
+    0,
+    0,
+    -180
+);
+
+heart.scale.set(
+    650,
+    650,
+    1
+);
+
+scene.add(
+    heart
+);
+
+/* =====================================================
+   BOKEH
+===================================================== */
+
+function createBokehTexture(){
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+    canvas.width=128;
+    canvas.height=128;
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+    const g =
+        ctx.createRadialGradient(
+            64,64,0,
+            64,64,64
+        );
+
+    g.addColorStop(
+        0,
+        "rgba(255,220,245,.32)"
+    );
+
+    g.addColorStop(
+        .18,
+        "rgba(255,150,220,.18)"
+    );
+
+    g.addColorStop(
+        .48,
+        "rgba(200,90,255,.06)"
+    );
+
+    g.addColorStop(
+        1,
+        "rgba(0,0,0,0)"
+    );
+
+    ctx.fillStyle =
+        g;
+
+    ctx.fillRect(
+        0,0,
+        128,128
+    );
+
+    return new THREE.CanvasTexture(
+        canvas
+    );
+}
+
+const bokehTexture =
+    createBokehTexture();
+
+function createBokehLayer(
+    count,
+    size,
+    opacity,
+    z
+){
+
+    const positions =
+        new Float32Array(
+            count*3
+        );
+
+    const basePositions =
+        new Float32Array(
+            count*3
+        );
+
+    const phases =
+        new Float32Array(
+            count
+        );
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        positions[i*3] =
+            (
+                Math.random()-.5
+            )*
+            1300;
+
+        positions[i*3+1] =
+            (
+                Math.random()-.5
+            )*
+            800;
+
+        positions[i*3+2] =
+            z+
+            (
+                Math.random()-.5
+            )*
+            180;
+
+        basePositions[i*3] =
+            positions[i*3];
+
+        basePositions[i*3+1] =
+            positions[i*3+1];
+
+        basePositions[i*3+2] =
+            positions[i*3+2];
+
+        phases[i] =
+            Math.random()*
+            Math.PI*
+            2;
+    }
+
+    const geometry =
+        new THREE.BufferGeometry();
+
+    geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(
+            positions,
+            3
+        )
+    );
+
+    const material =
+        new THREE.PointsMaterial({
+
+            size,
+
+            map:
+                bokehTexture,
+
+            color:
+                0xff9fd7,
+
+            transparent:true,
+
+            opacity,
+
+            blending:
+                THREE.AdditiveBlending,
+
+            depthWrite:false
+        });
+
+    const points =
+        new THREE.Points(
+            geometry,
+            material
+        );
+
+    scene.add(
+        points
+    );
+
+    return{
+        points,
+        geometry,
+        phases,
+        basePositions
+    };
+}
+
+const bokehLarge =
+    createBokehLayer(
+        isMobile ?14:24,
+        isMobile ?34:42,
+        .065,
+        270
+    );
+
+const bokehSmall =
+    createBokehLayer(
+        isMobile ?22:38,
+        isMobile ?19:23,
+        .055,
+        160
+    );
+
+/* =====================================================
+   GENERAR TEXTO
+===================================================== */
+
+function generateText(
+    text,
+    fontSize,
+    scale,
+    gap,
+    options={}
+){
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+    canvas.width=1800;
+    canvas.height=600;
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+    const{
+        weight=600,
+
+        family=
+            '"Bodoni MT", Didot, "Times New Roman", serif',
+
+        letterSpacing=0
+
+    }=options;
+
+    ctx.clearRect(
+        0,0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.fillStyle =
+        "white";
+
+    ctx.font =
+        `${weight} ${fontSize}px ${family}`;
+
+    ctx.textBaseline =
+        "middle";
+
+    if(
+        letterSpacing===0
+    ){
+
+        ctx.textAlign =
+            "center";
+
+        ctx.fillText(
+            text,
+            canvas.width/2,
+            canvas.height/2
+        );
+
+    }else{
+
+        const letters =
+            [...text];
+
+        const widths =
+            letters.map(
+                letter =>
+                    ctx.measureText(
+                        letter
+                    ).width
+            );
+
+        const totalWidth =
+            widths.reduce(
+                (a,b)=>a+b,
+                0
+            )+
+            letterSpacing*
+            (
+                letters.length-
+                1
+            );
+
+        let currentX =
+            canvas.width/2-
+            totalWidth/2;
+
+        ctx.textAlign =
+            "left";
+
+        for(
+            let i=0;
+            i<letters.length;
+            i++
+        ){
+
+            ctx.fillText(
+                letters[i],
+                currentX,
+                canvas.height/2
+            );
+
+            currentX +=
+                widths[i]+
+                letterSpacing;
+        }
+    }
+
+    const image =
+        ctx.getImageData(
+            0,0,
+            canvas.width,
+            canvas.height
+        );
+
+    const points=[];
+
+    for(
+        let y=0;
+        y<canvas.height;
+        y+=gap
+    ){
+
+        for(
+            let x=0;
+            x<canvas.width;
+            x+=gap
+        ){
+
+            const index =
+                (
+                    y*
+                    canvas.width+
+                    x
+                )*
+                4;
+
+            if(
+                image.data[
+                    index+3
+                ]>
+                90
+                &&
+                Math.random()>.08
+            ){
+
+                points.push({
+
+                    x:
+                        (
+                            x-
+                            canvas.width/2
+                        )*
+                        scale,
+
+                    y:
+                        -(
+                            y-
+                            canvas.height/2
+                        )*
+                        scale,
+
+                    z:
+                        (
+                            Math.random()-.5
+                        )*
+                        18
+                });
+            }
+        }
+    }
+
+    return points;
+}
+
+/* =====================================================
+   TE AMO
+===================================================== */
+
+const targets =
+    generateText(
+
+        "TE AMO",
+
+        300,
+
+        .39,
+
+        CONFIG.particleGap,
+
+        {
+            weight:600,
+
+            family:
+                '"Bodoni MT", Didot, "Times New Roman", serif',
+
+            letterSpacing:9
+        }
+    );
+
+const count =
+    targets.length;
+
+const positions =
+    new Float32Array(
+        count*3
+    );
+
+const startPositions =
+    new Float32Array(
+        count*3
+    );
+
+const colors =
+    new Float32Array(
+        count*3
+    );
+
+const baseColors =
+    new Float32Array(
+        count*3
+    );
+
+const velocityX =
+    new Float32Array(
+        count
+    );
+
+const velocityY =
+    new Float32Array(
+        count
+    );
+
+const velocityZ =
+    new Float32Array(
+        count
+    );
+
+const returnTimers =
+    new Float32Array(
+        count
+    );
+
+const phases =
+    new Float32Array(
+        count
+    );
+
+const sparklePhases =
+    new Float32Array(
+        count
+    );
+
+for(
+    let i=0;
+    i<count;
+    i++
+){
+
+    const radius =
+        450+
+        Math.random()*
+        1100;
+
+    const theta =
+        Math.random()*
+        Math.PI*
+        2;
+
+    const phi =
+        Math.acos(
+            2*
+            Math.random()-
+            1
+        );
+
+    const x =
+        radius*
+        Math.sin(phi)*
+        Math.cos(theta);
+
+    const y =
+        radius*
+        Math.sin(phi)*
+        Math.sin(theta);
+
+    const z =
+        radius*
+        Math.cos(phi);
+
+    positions[i*3] =
+        startPositions[i*3] =
+        x;
+
+    positions[i*3+1] =
+        startPositions[i*3+1] =
+        y;
+
+    positions[i*3+2] =
+        startPositions[i*3+2] =
+        z;
+
+    phases[i] =
+        Math.random()*
+        Math.PI*
+        2;
+
+    sparklePhases[i] =
+        Math.random()*
+        100;
+
+    const r =
+        Math.random();
+
+    let color;
+
+    if(r>.92){
+
+        color =
+            new THREE.Color(
+                0xffffff
+            );
+
+    }else if(r>.62){
+
+        color =
+            new THREE.Color(
+                0xffb4dc
+            );
+
+    }else if(r>.35){
+
+        color =
+            new THREE.Color(
+                0xff5eae
+            );
+
+    }else if(r>.12){
+
+        color =
+            new THREE.Color(
+                0xc997ff
+            );
+
+    }else{
+
+        color =
+            new THREE.Color(
+                0x8fcaff
+            );
+    }
+
+    colors[i*3] =
+        baseColors[i*3] =
+        color.r;
+
+    colors[i*3+1] =
+        baseColors[i*3+1] =
+        color.g;
+
+    colors[i*3+2] =
+        baseColors[i*3+2] =
+        color.b;
+}
+
+const textGeometry =
+    new THREE.BufferGeometry();
+
+textGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(
+        positions,
+        3
+    )
+);
+
+textGeometry.setAttribute(
+    "color",
+    new THREE.BufferAttribute(
+        colors,
+        3
+    )
+);
+
+const textMaterial =
+    new THREE.PointsMaterial({
+
+        size:
+            CONFIG.particleSize,
+
+        map:
+            particleTexture,
+
+        transparent:true,
+
+        opacity:.95,
+
+        vertexColors:true,
+
+        blending:
+            THREE.AdditiveBlending,
+
+        depthWrite:false
+    });
+
+const particles =
+    new THREE.Points(
+        textGeometry,
+        textMaterial
+    );
+
+scene.add(
+    particles
+);
+
+/* =====================================================
+   SUBTÍTULO
+===================================================== */
+
+const subTargets =
+    generateText(
+
+        "EN TODAS LAS VIDAS",
+
+        82,
+
+        .24,
+
+        isMobile
+            ?6
+            :5,
+
+        {
+            weight:400,
+
+            family:
+                'Georgia, "Times New Roman", serif',
+
+            letterSpacing:7
+        }
+    );
+
+const subPositions =
+    new Float32Array(
+        subTargets.length*
+        3
+    );
+
+for(
+    let i=0;
+    i<subTargets.length;
+    i++
+){
+
+    subPositions[i*3] =
+        subTargets[i].x;
+
+    subPositions[i*3+1] =
+        subTargets[i].y-
+        105;
+
+    subPositions[i*3+2] =
+        -20;
+}
+
+const subGeometry =
+    new THREE.BufferGeometry();
+
+subGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(
+        subPositions,
+        3
+    )
+);
+
+const subMaterial =
+    new THREE.PointsMaterial({
+
+        size:
+            isMobile
+                ?2.3
+                :2.6,
+
+        map:
+            particleTexture,
+
+        color:
+            0xffb4dd,
+
+        transparent:true,
+
+        opacity:0,
+
+        blending:
+            THREE.AdditiveBlending,
+
+        depthWrite:false
+    });
+
+const subtitle =
+    new THREE.Points(
+        subGeometry,
+        subMaterial
+    );
+
+scene.add(
+    subtitle
+);
+
+/* =====================================================
+   RESPONSIVE DEL TEXTO 3D
+===================================================== */
+
+function getResponsiveScale(){
+
+    const aspect =
+        innerWidth/
+        innerHeight;
+
+    if(
+        aspect < .60
+    ){
+
+        return .50;
+    }
+
+    if(
+        aspect < .72
+    ){
+
+        return .58;
+    }
+
+    if(
+        aspect < .90
+    ){
+
+        return .68;
+    }
+
+    if(
+        innerWidth < 800
+    ){
+
+        return .78;
+    }
+
+    return 1;
+}
+
+let responsiveScale =
+    getResponsiveScale();
+
+function applyResponsiveLayout(){
+
+    responsiveScale =
+        getResponsiveScale();
+
+    /*
+       En vertical subimos ligeramente
+       todo el texto para dejar espacio
+       a la huella y al mensaje.
+    */
+
+    if(
+        innerWidth <
+        innerHeight
+    ){
+
+        particles.position.y =
+            38;
+
+        subtitle.position.y =
+            38;
+
+        textHalo.position.y =
+            35;
+
+        heart.position.y =
+            28;
+
+    }else{
+
+        particles.position.y =
+            5;
+
+        subtitle.position.y =
+            5;
+
+        textHalo.position.y =
+            5;
+
+        heart.position.y =
+            0;
+    }
+}
+
+applyResponsiveLayout();
+
+/* =====================================================
+   ESTRELLAS
+===================================================== */
+
+function createStars(
+    amount,
+    distance,
+    size,
+    opacity
+){
+
+    const positions =
+        new Float32Array(
+            amount*3
+        );
+
+    const colors =
+        new Float32Array(
+            amount*3
+        );
+
+    for(
+        let i=0;
+        i<amount;
+        i++
+    ){
+
+        positions[i*3] =
+            (
+                Math.random()-.5
+            )*
+            distance;
+
+        positions[i*3+1] =
+            (
+                Math.random()-.5
+            )*
+            distance;
+
+        positions[i*3+2] =
+            (
+                Math.random()-.5
+            )*
+            distance;
+
+        const random =
+            Math.random();
+
+        const color =
+            new THREE.Color(
+
+                random>.72
+                    ?0xffa1d6
+                    :random>.42
+                        ?0xd6b5ff
+                        :0xffffff
+            );
+
+        colors[i*3] =
+            color.r;
+
+        colors[i*3+1] =
+            color.g;
+
+        colors[i*3+2] =
+            color.b;
+    }
+
+    const geometry =
+        new THREE.BufferGeometry();
+
+    geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(
+            positions,
+            3
+        )
+    );
+
+    geometry.setAttribute(
+        "color",
+        new THREE.BufferAttribute(
+            colors,
+            3
+        )
+    );
+
+    const material =
+        new THREE.PointsMaterial({
+
+            size,
+
+            map:
+                particleTexture,
+
+            vertexColors:true,
+
+            transparent:true,
+
+            opacity,
+
+            blending:
+                THREE.AdditiveBlending,
+
+            depthWrite:false
+        });
+
+    const stars =
+        new THREE.Points(
+            geometry,
+            material
+        );
+
+    scene.add(
+        stars
+    );
+
+    return stars;
+}
+
+const starsFar =
+    createStars(
+        isMobile ?1600:3000,
+        3200,
+        3,
+        .28
+    );
+
+const starsMid =
+    createStars(
+        isMobile ?700:1300,
+        2300,
+        4.5,
+        .25
+    );
+
+const starsNear =
+    createStars(
+        isMobile ?260:500,
+        1500,
+        8,
+        .18
+    );
+
+const foregroundDust =
+    createStars(
+        isMobile ?60:120,
+        1100,
+        15,
+        .07
+    );
+
+foregroundDust.position.z =
+    150;
+
+/* =====================================================
+   INTERACCIÓN
+===================================================== */
+
+const interaction = {
+
+    x:0,
+
+    y:0,
+
+    targetX:0,
+
+    targetY:0,
+
+    velocityX:0,
+
+    velocityY:0,
+
+    active:false
+};
+
+function setPointerPosition(
+    clientX,
+    clientY
+){
+
+    interaction.targetX =
+        (
+            clientX/
+            innerWidth
+        )*
+        2-
+        1;
+
+    interaction.targetY =
+        -(
+            clientY/
+            innerHeight
+        )*
+        2+
+        1;
+
+    interaction.active =
+        true;
+}
+
+/* Mouse */
+
+window.addEventListener(
+    "mousemove",
+    event=>{
+
+        setPointerPosition(
+            event.clientX,
+            event.clientY
+        );
+    },
+    {
+        passive:true
+    }
+);
+
+window.addEventListener(
+    "mouseleave",
+    ()=>{
+
+        interaction.active =
+            false;
+    }
+);
+
+/* =====================================================
+   TOUCH iPHONE / ANDROID
+===================================================== */
+
+renderer.domElement.addEventListener(
+    "touchstart",
+    event=>{
+
+        if(
+            event.touches.length>
+            0
+        ){
+
+            setPointerPosition(
+                event.touches[0].clientX,
+                event.touches[0].clientY
+            );
+        }
+    },
+    {
+        passive:true
+    }
+);
+
+renderer.domElement.addEventListener(
+    "touchmove",
+    event=>{
+
+        if(
+            event.touches.length>
+            0
+        ){
+
+            setPointerPosition(
+                event.touches[0].clientX,
+                event.touches[0].clientY
+            );
+        }
+    },
+    {
+        passive:true
+    }
+);
+
+renderer.domElement.addEventListener(
+    "touchend",
+    ()=>{
+
+        interaction.active =
+            false;
+    },
+    {
+        passive:true
+    }
+);
+
+/* =====================================================
+   RAYCASTER
+===================================================== */
+
+const raycaster =
+    new THREE.Raycaster();
+
+const pointer =
+    new THREE.Vector2();
+
+const interactionPlane =
+    new THREE.Plane(
+        new THREE.Vector3(
+            0,0,1
+        ),
+        0
+    );
+
+const interactionWorld =
+    new THREE.Vector3();
+
+function updateInteractionWorld(){
+
+    pointer.set(
+        interaction.x,
+        interaction.y
+    );
+
+    raycaster.setFromCamera(
+        pointer,
+        camera
+    );
+
+    raycaster.ray.intersectPlane(
+        interactionPlane,
+        interactionWorld
+    );
+}
+
+/* =====================================================
+   ESTRELLA FUGAZ
+===================================================== */
+
+const SHOOTING_COUNT =
+    isMobile
+        ?22
+        :30;
+
+const shootingPositions =
+    new Float32Array(
+        SHOOTING_COUNT*
+        3
+    );
+
+const shootingGeometry =
+    new THREE.BufferGeometry();
+
+shootingGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(
+        shootingPositions,
+        3
+    )
+);
+
+const shootingMaterial =
+    new THREE.PointsMaterial({
+
+        size:
+            isMobile
+                ?5
+                :7,
+
+        map:
+            particleTexture,
+
+        color:
+            0xffd1ea,
+
+        transparent:true,
+
+        opacity:0,
+
+        blending:
+            THREE.AdditiveBlending,
+
+        depthWrite:false
+    });
+
+const shootingStar =
+    new THREE.Points(
+        shootingGeometry,
+        shootingMaterial
+    );
+
+scene.add(
+    shootingStar
+);
+
+let shootingActive=false;
+
+let shootingProgress=0;
+
+let nextShooting=3.2;
+
+let shootingDirection=1;
+
+let shootingStartX=0;
+
+let shootingStartY=0;
+
+/* =====================================================
+   HTML INTERACTIVO
+===================================================== */
+
+const secretMessage =
+    document.getElementById(
+        "secret-message"
+    );
+
+const pawSecret =
+    document.getElementById(
+        "paw-secret"
+    );
+
+const pawButton =
+    document.getElementById(
+        "paw-button"
+    );
+
+let secretStarted=false;
+
+let pawRevealed=false;
+
+pawButton.addEventListener(
+    "click",
+    event=>{
+
+        event.stopPropagation();
+
+        pawSecret
+            .classList
+            .toggle(
+                "open"
+            );
+    }
+);
+
+pawButton.addEventListener(
+    "touchend",
+    event=>{
+
+        event.stopPropagation();
+    },
+    {
+        passive:true
+    }
+);
+
+document.addEventListener(
+    "click",
+    event=>{
+
+        if(
+            !pawSecret.contains(
+                event.target
+            )
+        ){
+
+            pawSecret
+                .classList
+                .remove(
+                    "open"
+                );
+        }
+    }
+);
+
+/* =====================================================
+   ANIMACIÓN
+===================================================== */
+
+const clock =
+    new THREE.Clock();
+
+let elapsed=0;
+
+function ease(x){
+
+    return x<.5
+
+        ?4*x*x*x
+
+        :1-
+        Math.pow(
+            -2*x+2,
+            3
+        )/
+        2;
+}
+
+/* Bokeh sin deriva infinita */
+
+function animateBokeh(
+    layer,
+    speed,
+    mouseAmount
+){
+
+    const arr =
+        layer
+        .geometry
+        .attributes
+        .position
+        .array;
+
+    const base =
+        layer.basePositions;
+
+    for(
+        let i=0;
+        i<layer.phases.length;
+        i++
+    ){
+
+        arr[i*3] =
+            base[i*3]+
+            Math.sin(
+                elapsed*
+                speed+
+                layer.phases[i]
+            )*
+            3.5;
+
+        arr[i*3+1] =
+            base[i*3+1]+
+            Math.cos(
+                elapsed*
+                speed*
+                .8+
+                layer.phases[i]
+            )*
+            2.5;
+
+        arr[i*3+2] =
+            base[i*3+2];
+    }
+
+    layer
+        .geometry
+        .attributes
+        .position
+        .needsUpdate =
+        true;
+
+    layer.points.position.x +=
+        (
+            interaction.x*
+            mouseAmount-
+            layer.points.position.x
+        )*
+        .006;
+
+    layer.points.position.y +=
+        (
+            interaction.y*
+            mouseAmount*
+            .65-
+            layer.points.position.y
+        )*
+        .006;
+}
+
+function animate(){
+
+    requestAnimationFrame(
+        animate
+    );
+
+    const delta =
+        Math.min(
+            clock.getDelta(),
+            .033
+        );
+
+    elapsed +=
+        delta;
+
+    /* =================================================
+       INTERACCIÓN SUAVE
+    ================================================= */
+
+    const oldX =
+        interaction.x;
+
+    const oldY =
+        interaction.y;
+
+    interaction.x +=
+        (
+            interaction.targetX-
+            interaction.x
+        )*
+        .14;
+
+    interaction.y +=
+        (
+            interaction.targetY-
+            interaction.y
+        )*
+        .14;
+
+    interaction.velocityX =
+        interaction.x-
+        oldX;
+
+    interaction.velocityY =
+        interaction.y-
+        oldY;
+
+    if(
+        interaction.active
+    ){
+
+        updateInteractionWorld();
+    }
+
+    const interactionSpeedX =
+        interaction.velocityX*
+        650;
+
+    const interactionSpeedY =
+        interaction.velocityY*
+        650;
+
+    /* =================================================
+       FORMACIÓN
+    ================================================= */
+
+    let formation =
+        (
+            elapsed-
+            1
+        )/
+        CONFIG.formationTime;
+
+    formation =
+        THREE.MathUtils.clamp(
+            formation,
+            0,
+            1
+        );
+
+    formation =
+        ease(
+            formation
+        );
+
+    /* =================================================
+       LATIDO
+    ================================================= */
+
+    const beatCycle =
+        elapsed%
+        3.6;
+
+    let heartbeat=0;
+
+    if(
+        beatCycle<
+        .22
+    ){
+
+        heartbeat =
+            Math.sin(
+                beatCycle/
+                .22*
+                Math.PI
+            );
+
+    }else if(
+        beatCycle>.30 &&
+        beatCycle<.52
+    ){
+
+        heartbeat =
+            Math.sin(
+                (
+                    beatCycle-
+                    .30
+                )/
+                .22*
+                Math.PI
+            )*
+            .45;
+    }
+
+    /* =================================================
+       TE AMO
+    ================================================= */
+
+    const pos =
+        textGeometry
+        .attributes
+        .position
+        .array;
+
+    const col =
+        textGeometry
+        .attributes
+        .color
+        .array;
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        const target =
+            targets[i];
+
+        if(
+            formation<
+            .999
+        ){
+
+            const sx =
+                startPositions[
+                    i*3
+                ];
+
+            const sy =
+                startPositions[
+                    i*3+1
+                ];
+
+            const sz =
+                startPositions[
+                    i*3+2
+                ];
+
+            const rotation =
+                elapsed*
+                .045;
+
+            const gx =
+                sx*
+                Math.cos(
+                    rotation
+                )-
+                sz*
+                Math.sin(
+                    rotation
+                );
+
+            const gz =
+                sx*
+                Math.sin(
+                    rotation
+                )+
+                sz*
+                Math.cos(
+                    rotation
+                );
+
+            pos[i*3] =
+                THREE.MathUtils.lerp(
+                    gx,
+                    target.x,
+                    formation
+                );
+
+            pos[i*3+1] =
+                THREE.MathUtils.lerp(
+                    sy,
+                    target.y,
+                    formation
+                );
+
+            pos[i*3+2] =
+                THREE.MathUtils.lerp(
+                    gz,
+                    target.z,
+                    formation
+                );
+
+            continue;
+        }
+
+        let px =
+            pos[i*3];
+
+        let py =
+            pos[i*3+1];
+
+        let pz =
+            pos[i*3+2];
+
+        const waveX =
+            Math.sin(
+                elapsed*.65+
+                target.y*.018+
+                phases[i]*.35
+            )*
+            2.8;
+
+        const waveY =
+            Math.cos(
+                elapsed*.60+
+                target.x*.014+
+                phases[i]*.30
+            )*
+            2.2;
+
+        const turbulenceX =
+            Math.sin(
+                elapsed*.30+
+                target.x*.025+
+                target.y*.012
+            )*
+            1.2;
+
+        const turbulenceY =
+            Math.cos(
+                elapsed*.35+
+                target.y*.028+
+                target.x*.010
+            )*
+            1.2;
+
+        const individualX =
+            Math.sin(
+                elapsed*.8+
+                phases[i]
+            )*
+            .7;
+
+        const individualY =
+            Math.cos(
+                elapsed*.75+
+                phases[i]
+            )*
+            .7;
+
+        const floatingZ =
+            Math.sin(
+                elapsed*.55+
+                target.x*.015+
+                phases[i]
+            )*
+            4+
+            Math.cos(
+                elapsed*.35+
+                target.y*.02
+            )*
+            2;
+
+        const beatScale =
+            1+
+            heartbeat*
+            .007;
+
+        const desiredX =
+            target.x*
+            beatScale+
+            waveX+
+            turbulenceX+
+            individualX;
+
+        const desiredY =
+            target.y*
+            beatScale+
+            waveY+
+            turbulenceY+
+            individualY;
+
+        const desiredZ =
+            target.z+
+            floatingZ+
+            heartbeat*
+            2;
+
+        let touched =
+            false;
+
+        if(
+            interaction.active
+        ){
+
+            const dx =
+                px-
+                interactionWorld.x;
+
+            const dy =
+                py-
+                interactionWorld.y;
+
+            const distSq =
+                dx*dx+
+                dy*dy;
+
+            const radius =
+                CONFIG.mouseRadius;
+
+            if(
+                distSq<
+                radius*
+                radius
+            ){
+
+                touched =
+                    true;
+
+                returnTimers[i] =
+                    CONFIG.returnDelay;
+
+                const distance =
+                    Math.sqrt(
+                        distSq
+                    );
+
+                const safe =
+                    Math.max(
+                        distance,
+                        .001
+                    );
+
+                const influence =
+                    1-
+                    distance/
+                    radius;
+
+                const smoothStep =
+                    influence*
+                    influence*
+                    (
+                        3-
+                        2*
+                        influence
+                    );
+
+                const smooth =
+                    smoothStep*
+                    smoothStep;
+
+                const force =
+                    smooth*
+                    CONFIG.mouseForce;
+
+                velocityX[i] +=
+                    dx/
+                    safe*
+                    force+
+                    interactionSpeedX*
+                    CONFIG.mouseDragForce*
+                    smooth;
+
+                velocityY[i] +=
+                    dy/
+                    safe*
+                    force+
+                    interactionSpeedY*
+                    CONFIG.mouseDragForce*
+                    smooth;
+
+                velocityZ[i] +=
+                    Math.sin(
+                        phases[i]+
+                        elapsed
+                    )*
+                    CONFIG.depthForce*
+                    smooth;
+
+                col[i*3] +=
+                    (
+                        1-
+                        col[i*3]
+                    )*
+                    .08*
+                    smooth;
+
+                col[i*3+1] +=
+                    (
+                        1-
+                        col[i*3+1]
+                    )*
+                    .08*
+                    smooth;
+
+                col[i*3+2] +=
+                    (
+                        1-
+                        col[i*3+2]
+                    )*
+                    .08*
+                    smooth;
+            }
+        }
+
+        if(
+            returnTimers[i]>
+            0
+        ){
+
+            returnTimers[i] -=
+                delta;
+
+        }else{
+
+            velocityX[i] +=
+                (
+                    desiredX-
+                    px
+                )*
+                CONFIG.spring;
+
+            velocityY[i] +=
+                (
+                    desiredY-
+                    py
+                )*
+                CONFIG.spring;
+
+            velocityZ[i] +=
+                (
+                    desiredZ-
+                    pz
+                )*
+                CONFIG.spring;
+        }
+
+        const sparkle =
+            Math.sin(
+                elapsed*
+                1.8+
+                sparklePhases[i]
+            );
+
+        if(
+            sparkle>
+            .992
+        ){
+
+            const s =
+                (
+                    sparkle-
+                    .992
+                )/
+                .008;
+
+            col[i*3] +=
+                (
+                    1-
+                    col[i*3]
+                )*
+                s*
+                .06;
+
+            col[i*3+1] +=
+                (
+                    1-
+                    col[i*3+1]
+                )*
+                s*
+                .06;
+
+            col[i*3+2] +=
+                (
+                    1-
+                    col[i*3+2]
+                )*
+                s*
+                .06;
+        }
+
+        if(
+            !touched
+        ){
+
+            col[i*3] +=
+                (
+                    baseColors[i*3]-
+                    col[i*3]
+                )*
+                .018;
+
+            col[i*3+1] +=
+                (
+                    baseColors[i*3+1]-
+                    col[i*3+1]
+                )*
+                .018;
+
+            col[i*3+2] +=
+                (
+                    baseColors[i*3+2]-
+                    col[i*3+2]
+                )*
+                .018;
+        }
+
+        velocityX[i] *=
+            CONFIG.friction;
+
+        velocityY[i] *=
+            CONFIG.friction;
+
+        velocityZ[i] *=
+            CONFIG.friction;
+
+        pos[i*3] =
+            px+
+            velocityX[i];
+
+        pos[i*3+1] =
+            py+
+            velocityY[i];
+
+        pos[i*3+2] =
+            pz+
+            velocityZ[i];
+    }
+
+    textGeometry
+        .attributes
+        .position
+        .needsUpdate =
+        true;
+
+    textGeometry
+        .attributes
+        .color
+        .needsUpdate =
+        true;
+
+    /* =================================================
+       SUBTÍTULO
+    ================================================= */
+
+    const subtitleFade =
+        THREE.MathUtils.clamp(
+            (
+                elapsed-
+                6
+            )/
+            1.6,
+            0,
+            1
+        );
+
+    subMaterial.opacity =
+        subtitleFade*
+        .48;
+
+    const baseSubtitleY =
+        innerWidth<
+        innerHeight
+            ?38
+            :5;
+
+    subtitle.position.y =
+        baseSubtitleY+
+        Math.sin(
+            elapsed*
+            .30
+        )*
+        .8;
+
+    /* =================================================
+       ESCALA RESPONSIVE + RESPIRACIÓN
+    ================================================= */
+
+    const breathing =
+        1+
+        Math.sin(
+            elapsed*
+            .40
+        )*
+        .004+
+        heartbeat*
+        .004;
+
+    const finalScale =
+        responsiveScale*
+        breathing;
+
+    particles.scale.setScalar(
+        finalScale
+    );
+
+    subtitle.scale.setScalar(
+        responsiveScale
+    );
+
+    /* =================================================
+       CORAZÓN
+    ================================================= */
+
+    const heartScale =
+        responsiveScale*
+        (
+            1+
+            heartbeat*
+            .03+
+            Math.sin(
+                elapsed*
+                .4
+            )*
+            .01
+        );
+
+    heart.scale.set(
+        650*
+        heartScale,
+        650*
+        heartScale,
+        1
+    );
+
+    const heartOpacity =
+        .07+
+        heartbeat*
+        .045+
+        Math.sin(
+            elapsed*
+            .35
+        )*
+        .01;
+
+    /* =================================================
+       HALO
+    ================================================= */
+
+    const haloPulse =
+        responsiveScale*
+        (
+            1+
+            Math.sin(
+                elapsed*
+                .40
+            )*
+            .025+
+            heartbeat*
+            .035
+        );
+
+    textHalo.scale.set(
+        780*
+        haloPulse,
+        390*
+        haloPulse,
+        1
+    );
+
+    const haloOpacity =
+        .14+
+        heartbeat*
+        .035+
+        Math.sin(
+            elapsed*
+            .28
+        )*
+        .012;
+
+    /* =================================================
+       GALAXIA
+    ================================================= */
+
+    galaxy.rotation.z +=
+        delta*
+        .008;
+
+    galaxy.rotation.x =
+        -.12+
+        Math.sin(
+            elapsed*
+            .10
+        )*
+        .012;
+
+    galaxy.position.x +=
+        (
+            interaction.x*
+            -12-
+            galaxy.position.x
+        )*
+        .006;
+
+    galaxy.position.y +=
+        (
+            15+
+            interaction.y*
+            -7-
+            galaxy.position.y
+        )*
+        .006;
+
+    /* =================================================
+       AURORAS
+    ================================================= */
+
+    auroraMain.position.x =
+        -80+
+        Math.sin(
+            elapsed*
+            .045
+        )*
+        45;
+
+    auroraMain.position.y =
+        35+
+        Math.cos(
+            elapsed*
+            .035
+        )*
+        22;
+
+    auroraMain.material.rotation =
+        -.15+
+        Math.sin(
+            elapsed*
+            .025
+        )*
+        .035;
+
+    const auroraPulse =
+        1+
+        Math.sin(
+            elapsed*
+            .10
+        )*
+        .025;
+
+    auroraMain.scale.set(
+        1500*
+        auroraPulse,
+        720*
+        auroraPulse,
+        1
+    );
+
+    auroraSecondary.position.x =
+        300+
+        Math.cos(
+            elapsed*
+            .038
+        )*
+        35;
+
+    auroraSecondary.position.y =
+        -100+
+        Math.sin(
+            elapsed*
+            .05
+        )*
+        25;
+
+    /* =================================================
+       NEBULOSAS
+    ================================================= */
+
+    nebulaPink.position.x =
+        -200+
+        Math.sin(
+            elapsed*
+            .07
+        )*
+        25;
+
+    nebulaPurple.position.x =
+        240+
+        Math.cos(
+            elapsed*
+            .06
+        )*
+        30;
+
+    nebulaBlue.position.y =
+        190+
+        Math.sin(
+            elapsed*
+            .05
+        )*
+        20;
+
+    /* =================================================
+       BOKEH
+    ================================================= */
+
+    animateBokeh(
+        bokehLarge,
+        .15,
+        -24
+    );
+
+    animateBokeh(
+        bokehSmall,
+        .20,
+        -15
+    );
+
+    /* =================================================
+       ESTRELLAS
+    ================================================= */
+
+    starsFar.rotation.y +=
+        delta*
+        .002;
+
+    starsMid.rotation.y -=
+        delta*
+        .003;
+
+    starsNear.rotation.y +=
+        delta*
+        .004;
+
+    starsMid.position.x +=
+        (
+            interaction.x*
+            -5-
+            starsMid.position.x
+        )*
+        .003;
+
+    starsNear.position.x +=
+        (
+            interaction.x*
+            -10-
+            starsNear.position.x
+        )*
+        .004;
+
+    foregroundDust.position.x +=
+        (
+            interaction.x*
+            -20-
+            foregroundDust.position.x
+        )*
+        .006;
+
+    foregroundDust.position.y +=
+        (
+            interaction.y*
+            -14-
+            foregroundDust.position.y
+        )*
+        .006;
+
+    /* =================================================
+       ESTRELLA FUGAZ
+    ================================================= */
+
+    if(
+        !shootingActive
+        &&
+        elapsed>
+        nextShooting
+        &&
+        elapsed<
+        CONFIG.secretStart
+    ){
+
+        shootingActive =
+            true;
+
+        shootingProgress =
+            0;
+
+        shootingDirection =
+            Math.random()>.5
+                ?1
+                :-1;
+
+        shootingStartX =
+            shootingDirection===1
+                ?-600
+                :600;
+
+        shootingStartY =
+            220+
+            Math.random()*
+            160;
+    }
+
+    if(
+        shootingActive
+    ){
+
+        shootingProgress +=
+            delta*
+            .65;
+
+        const arr =
+            shootingGeometry
+            .attributes
+            .position
+            .array;
+
+        const travelX =
+            shootingDirection*
+            1200*
+            shootingProgress;
+
+        const travelY =
+            -500*
+            shootingProgress;
+
+        for(
+            let i=0;
+            i<SHOOTING_COUNT;
+            i++
+        ){
+
+            const distance =
+                i*
+                13;
+
+            arr[i*3] =
+                shootingStartX+
+                travelX-
+                shootingDirection*
+                distance;
+
+            arr[i*3+1] =
+                shootingStartY+
+                travelY+
+                distance*
+                .45;
+
+            arr[i*3+2] =
+                50;
+        }
+
+        shootingGeometry
+            .attributes
+            .position
+            .needsUpdate =
+            true;
+
+        shootingMaterial.opacity =
+            Math.sin(
+                Math.min(
+                    shootingProgress,
+                    1
+                )*
+                Math.PI
+            )*
+            .65;
+
+        if(
+            shootingProgress>
+            1
+        ){
+
+            shootingActive =
+                false;
+
+            shootingMaterial.opacity =
+                0;
+        }
+    }
+
+    /* =================================================
+       ROTACIÓN TEXTO
+    ================================================= */
+
+    particles.rotation.y +=
+        (
+            Math.sin(
+                elapsed*
+                .22
+            )*
+            .006+
+            interaction.x*
+            .003-
+            particles.rotation.y
+        )*
+        .012;
+
+    particles.rotation.x +=
+        (
+            Math.cos(
+                elapsed*
+                .18
+            )*
+            .003-
+            interaction.y*
+            .002-
+            particles.rotation.x
+        )*
+        .012;
+
+    /* =================================================
+       CÁMARA
+    ================================================= */
+
+    const parallaxAmount =
+        isMobile
+            ?3
+            :8;
+
+    camera.position.x +=
+        (
+            interaction.x*
+            parallaxAmount-
+            camera.position.x
+        )*
+        .01;
+
+    camera.position.y +=
+        (
+            interaction.y*
+            (
+                isMobile
+                    ?2
+                    :6
+            )-
+            camera.position.y
+        )*
+        .01;
+
+    const cameraProgress =
+        THREE.MathUtils.clamp(
+            elapsed/
+            7,
+            0,
+            1
+        );
+
+    /*
+       En móvil dejamos la cámara
+       un poco más lejos.
+    */
+
+    const finalCameraZ =
+        isMobile
+            ?600
+            :560;
+
+    const initialCameraZ =
+        isMobile
+            ?760
+            :760;
+
+    const cameraTargetZ =
+        THREE.MathUtils.lerp(
+            initialCameraZ,
+            finalCameraZ,
+            ease(
+                cameraProgress
+            )
+        );
+
+    camera.position.z +=
+        (
+            cameraTargetZ-
+            camera.position.z
+        )*
+        .015;
+
+    camera.lookAt(
+        0,0,0
+    );
+
+    /* =================================================
+       MENSAJE
+    ================================================= */
+
+    if(
+        elapsed>=
+        CONFIG.messageStart
+        &&
+        !secretStarted
+    ){
+
+        secretStarted =
+            true;
+
+        secretMessage
+            .classList
+            .add(
+                "visible"
+            );
+    }
+
+    /* =================================================
+       PATITA
+    ================================================= */
+
+    if(
+        elapsed>=
+        CONFIG.pawReveal
+        &&
+        !pawRevealed
+    ){
+
+        pawRevealed =
+            true;
+
+        pawSecret
+            .classList
+            .add(
+                "visible"
+            );
+    }
+
+    /* =================================================
+       FINAL CINEMATOGRÁFICO
+    ================================================= */
+
+    const secretProgress =
+        THREE.MathUtils.clamp(
+            (
+                elapsed-
+                CONFIG.secretStart
+            )/
+            CONFIG.secretDuration,
+            0,
+            1
+        );
+
+    const secretSmooth =
+        secretProgress*
+        secretProgress*
+        (
+            3-
+            2*
+            secretProgress
+        );
+
+    galaxy.material.opacity =
+        THREE.MathUtils.lerp(
+            .16,
+            .035,
+            secretSmooth
+        );
+
+    auroraMain.material.opacity =
+        THREE.MathUtils.lerp(
+            .22,
+            .055,
+            secretSmooth
+        );
+
+    auroraSecondary.material.opacity =
+        THREE.MathUtils.lerp(
+            .13,
+            .025,
+            secretSmooth
+        );
+
+    nebulaPink.material.opacity =
+        THREE.MathUtils.lerp(
+            .34,
+            .12,
+            secretSmooth
+        );
+
+    nebulaPurple.material.opacity =
+        THREE.MathUtils.lerp(
+            .30,
+            .10,
+            secretSmooth
+        );
+
+    nebulaBlue.material.opacity =
+        THREE.MathUtils.lerp(
+            .20,
+            .06,
+            secretSmooth
+        );
+
+    starsFar.material.opacity =
+        THREE.MathUtils.lerp(
+            .28,
+            .09,
+            secretSmooth
+        );
+
+    starsMid.material.opacity =
+        THREE.MathUtils.lerp(
+            .25,
+            .07,
+            secretSmooth
+        );
+
+    starsNear.material.opacity =
+        THREE.MathUtils.lerp(
+            .18,
+            .05,
+            secretSmooth
+        );
+
+    foregroundDust.material.opacity =
+        THREE.MathUtils.lerp(
+            .07,
+            .02,
+            secretSmooth
+        );
+
+    bokehLarge
+        .points
+        .material
+        .opacity =
+        THREE.MathUtils.lerp(
+            .065,
+            .012,
+            secretSmooth
+        );
+
+    bokehSmall
+        .points
+        .material
+        .opacity =
+        THREE.MathUtils.lerp(
+            .055,
+            .01,
+            secretSmooth
+        );
+
+    heartMaterial.opacity =
+        heartOpacity*
+        THREE.MathUtils.lerp(
+            1,
+            .48,
+            secretSmooth
+        );
+
+    haloMaterial.opacity =
+        haloOpacity*
+        THREE.MathUtils.lerp(
+            1,
+            .72,
+            secretSmooth
+        );
+
+    textMaterial.opacity =
+        THREE.MathUtils.lerp(
+            .95,
+            1,
+            secretSmooth
+        );
+
+    textMaterial.size =
+        THREE.MathUtils.lerp(
+            CONFIG.particleSize,
+            isMobile
+                ?5.1
+                :5.7,
+            secretSmooth
+        );
+
+    renderer.render(
+        scene,
+        camera
+    );
+}
+
+animate();
+
+/* =====================================================
+   RESIZE / ROTACIÓN IPHONE
+===================================================== */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+
+        camera.aspect =
+            innerWidth/
+            innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setPixelRatio(
+            Math.min(
+                window.devicePixelRatio || 1,
+                innerWidth<=600
+                    ?1.6
+                    :2
+            )
+        );
+
+        renderer.setSize(
+            innerWidth,
+            innerHeight
+        );
+
+        applyResponsiveLayout();
+    }
+);
+
+</script>
+
+</body>
+</html>
